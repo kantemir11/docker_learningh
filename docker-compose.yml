@@ -1,21 +1,21 @@
 services:
   db:
     restart: always
-    image: postgres
+    image: postgres:16.1-alpine
     env_file:
       - .env
     container_name: db
     volumes:
-      - pgdbdata:/var/lib.postgresql/data/
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  django:
+  back:
     restart: always
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: backend
-    command: sh -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    container_name: back
+    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
@@ -27,4 +27,4 @@ services:
   
 
 volumes:
-  pgdbdata: null
+  pgdata:
